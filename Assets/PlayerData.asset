@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d5075165cf375458223b9a40acf3f0, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: Assembly-CSharp::ShipUpgradeData
+  BattLevel: 0
+  SolPanLevel: 0
+  ShieldLevel: 0
+  CommLevel: 0
+  UpgradeSol: 0
+  BackupBat: 0
+  Money: 0
+  Power: 100
+  ShieldHealth: 100
+  HullHealth: 100
+  Heat: 0
+  ishit: 0
+  HullColour: {r: 0.58431375, g: 0.52156866, b: 0.52156866, a: 1}
+  HullMaterial: {fileID: 2100000, guid: 64e81a6f54239b9449b9bdcd26bf06ca, type: 2}
+  HubConnectorColour: {r: 1, g: 1, b: 1, a: 1}
+  HubConnectorMaterial: {fileID: 2100000, guid: 98155526f2270e74fb767afe9db04e86, type: 2}
+  ConnectorColour: {r: 0.53333336, g: 0.53333336, b: 0.53333336, a: 1}
+  ConnectorMaterial: {fileID: 2100000, guid: c32bc79ce8f2521449825008472f99fb, type: 2}
+  RingColour: {r: 0, g: 0, b: 0, a: 1}
+  RingMaterial: {fileID: 2100000, guid: fc29d9896e729d040a022d8b3c1c963d, type: 2}
+  ShieldColour: {r: 0.39215687, g: 0.99607843, b: 1, a: 0.36862746}
+  ShieldMaterial: {fileID: 2100000, guid: 11907eec5471b7e41be404676458e224, type: 2}
+  ActivePlanet: 2
