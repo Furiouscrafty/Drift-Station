@@ -3,24 +3,17 @@ using TMPro;
 
 public class OrbitScript : MonoBehaviour
 {
-    [System.Serializable]
-    public struct PlanetOrbitSettings
-    {
-        public ShipUpgradeData.Planet planet;
-        public float orbitSpeed;
-        public float orbitRadius;
-        public int cashPerOrbit;
-    }
-
     [Header("Data")]
     public ShipUpgradeData shipData;
+    public ShipResourceData shipResourceData;
 
     [Header("Orbit Target")]
     public Transform target; // Object to orbit around
 
-    [Header("Per-Planet Orbit Settings")]
-    [Tooltip("Add one entry per planet with its own speed, radius, and cash reward.")]
-    public PlanetOrbitSettings[] planetSettings;
+    [Header("Orbit Settings")]
+    public float orbitSpeed = 1f;
+    public float orbitRadius = 5f;
+    public int cashPerOrbit = 10;
 
     [Tooltip("Starting position on the orbit, in degrees (0-360).")]
     public float startAngleDegrees = 0f;
@@ -33,21 +26,15 @@ public class OrbitScript : MonoBehaviour
 
     private float angle;              // used for actual position (includes start offset)
     private float traveledRadians;    // used purely to detect a completed lap (always starts at 0)
-    private float orbitSpeed;
-    private float orbitRadius;
-    private int cashPerOrbit;
     private float messageTimer;
-    private int orbitsCompleted;
 
     private void Start()
     {
         angle = startAngleDegrees * Mathf.Deg2Rad;
         traveledRadians = 0f;
-        ApplyPlanetSettings();
 
         if (orbitRewardText != null)
             orbitRewardText.text = "";
-
         UpdateOrbitCountText();
     }
 
@@ -92,7 +79,9 @@ public class OrbitScript : MonoBehaviour
 
     private void CompleteOrbit()
     {
-        orbitsCompleted++;
+        if (shipResourceData != null)
+            shipResourceData.RegisterOrbitCompleted();
+
         UpdateOrbitCountText();
 
         if (shipData == null || cashPerOrbit <= 0)
@@ -109,29 +98,7 @@ public class OrbitScript : MonoBehaviour
 
     private void UpdateOrbitCountText()
     {
-        if (orbitCountText != null)
-            orbitCountText.text = $"Orbits completed: {orbitsCompleted}";
-    }
-
-    public void ApplyPlanetSettings()
-    {
-        if (shipData == null || planetSettings.Length == 0)
-        {
-            Debug.LogWarning("OrbitScript: Missing ShipUpgradeData or planetSettings is empty.");
-            return;
-        }
-
-        foreach (var settings in planetSettings)
-        {
-            if (settings.planet == shipData.ActivePlanet)
-            {
-                orbitSpeed = settings.orbitSpeed;
-                orbitRadius = settings.orbitRadius;
-                cashPerOrbit = settings.cashPerOrbit;
-                return;
-            }
-        }
-
-        Debug.LogWarning($"OrbitScript: No orbit settings found for {shipData.ActivePlanet}. Using default speed/radius/cash of 0.");
+        if (orbitCountText != null && shipResourceData != null)
+            orbitCountText.text = $"Orbits completed: {shipResourceData.CurrentOrbits}";
     }
 }

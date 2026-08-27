@@ -12,6 +12,7 @@ public class BrickLaser : MonoBehaviour
     [Header("Ship Data")]
     [Tooltip("Used to check upgrade state (e.g. UpgradeSol) so hit effects can vary accordingly.")]
     public ShipUpgradeData shipData;
+    public ShipResourceData shipResourceData;
 
     [Header("Damage Settings")]
     public float heatPerHit = 5f;
@@ -34,6 +35,9 @@ public class BrickLaser : MonoBehaviour
 
         if (shipData == null)
             Debug.LogWarning("[BrickLaser] No ShipUpgradeData assigned — solar panel hits will fall back to the unupgraded heat value.");
+
+        if (shipResourceData == null)
+            Debug.LogWarning("[BrickLaser] No ShipResourceData assigned — hits will not apply.");
 
         // Print exactly which layers hitMask currently includes, so you can
         // confirm in the Console that all 3 are actually turned on.
@@ -70,10 +74,10 @@ public class BrickLaser : MonoBehaviour
 
             if (layer == spaceShipLayer)
             {
-                shipData.ishit = true;
+                shipResourceData.ishit = true;
                 Debug.Log("Laser hit SPACE SHIP: " + hit.collider.name);
                 if (handler != null)
-                    handler.spaceship.Heat += heatPerHit;
+                    shipResourceData.Heat += heatPerHit;
             }
             else if (layer == shieldLayer)
             {
@@ -81,8 +85,8 @@ public class BrickLaser : MonoBehaviour
                 // Shield blocks heat buildup entirely, but takes power drain instead.
                 if (handler != null)
                 {
-                    handler.spaceship.Power = Mathf.Max(0f, handler.spaceship.Power - powerDrainPerShieldHit);
-                    handler.spaceship.ShieldHealth = Mathf.Max(0f, handler.spaceship.ShieldHealth - ShieldDrainPerShieldHit);
+                    handler.resources.Power = Mathf.Max(0f, handler.resources.Power - powerDrainPerShieldHit);
+                    handler.resources.ShieldHealth = Mathf.Max(0f, handler.resources.ShieldHealth - ShieldDrainPerShieldHit);
                 }
             }
             else if (layer == solarPanelLayer)
@@ -90,18 +94,18 @@ public class BrickLaser : MonoBehaviour
                 Debug.Log("Laser hit SOLAR PANEL: " + hit.collider.name);
                 if (handler != null)
                 {
-                    shipData.ishit = true;
+                    shipResourceData.ishit = true;
                     bool isUpgraded = shipData != null && shipData.UpgradeSol;
                     float appliedHeat = isUpgraded ? heatPerSolarHit : heatPerSolarHitUnupgraded;
 
-                    handler.spaceship.Heat += appliedHeat;
-                    handler.spaceship.Power += powerGainPerSolarHit;
+                    handler.resources.Heat += appliedHeat;
+                    handler.resources.Power += powerGainPerSolarHit;
                 }
             }
             else
             {
                 Debug.Log($"Laser hit OTHER: {hit.collider.name} (layer: {LayerMask.LayerToName(layer)})");
-                shipData.ishit = false;
+                shipResourceData.ishit = false;
             }
 
             Debug.DrawRay(transform.position, worldDir * hit.distance, Color.yellow);

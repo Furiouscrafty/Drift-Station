@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewShipUpgradeData", menuName = "Game/Ship Upgrade Data")]
+[CreateAssetMenu(fileName = "ShipUpgradeData", menuName = "Game/Ship Upgrade Data")]
 public class ShipUpgradeData : ScriptableObject
 {
     [Header("Upgrade Levels (0-3)")]
@@ -15,13 +15,6 @@ public class ShipUpgradeData : ScriptableObject
 
     [Header("Currency")]
     public int Money;
-
-    [Header("Resources")]
-    public float Power = 100;
-    public float ShieldHealth = 100;
-    public float HullHealth = 100;
-    public float Heat;
-    public bool ishit;
 
     [Header("Appearance - Hull")]
     public Color HullColour = Color.white;

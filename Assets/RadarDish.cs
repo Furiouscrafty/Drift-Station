@@ -5,6 +5,7 @@ public class RadarDish : MonoBehaviour
 {
     [Header("Data")]
     public ShipUpgradeData shipData;
+    public ShipResourceData shipResourceData;
 
     [Header("Raycast Origin & Direction")]
     [Tooltip("The point the radar beam fires from. Usually the dish itself or a child transform.")]
@@ -50,23 +51,23 @@ public class RadarDish : MonoBehaviour
         if (!isFiring)
             return;
 
-        if (shipData == null)
+        if (shipResourceData == null)
         {
-            Debug.LogWarning("RadarDish: ShipUpgradeData is not assigned.");
+            Debug.LogWarning("RadarDish: ShipResourceData is not assigned.");
             StopFiring();
             return;
         }
 
         // Stop firing automatically if power runs out
-        if (shipData.Power <= 0f)
+        if (shipResourceData.Power <= 0f)
         {
             StopFiring();
             return;
         }
 
-        shipData.Power -= powerDrainPerSecond * Time.deltaTime;
-        if (shipData.Power < 0f)
-            shipData.Power = 0f;
+        shipResourceData.Power -= powerDrainPerSecond * Time.deltaTime;
+        if (shipResourceData.Power < 0f)
+            shipResourceData.Power = 0f;
 
         Scan();
     }
@@ -80,7 +81,7 @@ public class RadarDish : MonoBehaviour
             return;
         }
 
-        if (shipData != null && shipData.Power <= 0f)
+        if (shipResourceData != null && shipResourceData.Power <= 0f)
         {
             Debug.Log("RadarDish: Not enough power to fire.");
             return;

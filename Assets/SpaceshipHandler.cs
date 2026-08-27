@@ -5,6 +5,7 @@ public class SpaceshipHandler : MonoBehaviour
 {
     [Header("Upgrades")]
     public ShipUpgradeData spaceship;
+    public ShipResourceData resources;
     public GameObject BackupBattery;
     public GameObject SolUpgrade;
     public GameObject Shields;
@@ -34,10 +35,10 @@ public class SpaceshipHandler : MonoBehaviour
         PlayerUI.SetActive(true);
         DeathUI.SetActive(false);
         Usedl = false;
-        spaceship.Power = 100;
-        spaceship.ShieldHealth = 100;
-        spaceship.Heat = 0;
-        spaceship.HullHealth = 100;
+        resources.Power = 100;
+        resources.ShieldHealth = 100;
+        resources.Heat = 0;
+        resources.HullHealth = 100;
         if (spaceship.BackupBat)
         {
             BackupBattery.SetActive(true);
@@ -54,39 +55,39 @@ public class SpaceshipHandler : MonoBehaviour
         //Battery Level Upgrades
         if (spaceship.BattLevel == 1)
         {
-            spaceship.Power = (float)(spaceship.Power * 1.06);
+            resources.Power = (float)(resources.Power * 1.06);
         }
         else if (spaceship.BattLevel == 2)
         {
-            spaceship.Power = (float)(spaceship.Power * 1.08);
+            resources.Power = (float)(resources.Power * 1.08);
         }
         else if (spaceship.BattLevel == 3)
         {
-            spaceship.Power = (float)(spaceship.Power * 1.1);
+            resources.Power = (float)(resources.Power * 1.1);
         }
         else
-            spaceship.Power = 100;
+            resources.Power = 100;
 
 
         //Shields Level Upgrades
         if (spaceship.ShieldLevel == 1)
         {
-            spaceship.ShieldHealth = (float)(spaceship.ShieldHealth * 1.1);
+            resources.ShieldHealth = (float)(resources.ShieldHealth * 1.1);
         }
         else if (spaceship.ShieldLevel == 2)
         {
-            spaceship.ShieldHealth = (float)(spaceship.ShieldHealth * 1.15);
+            resources.ShieldHealth = (float)(resources.ShieldHealth * 1.15);
         }
         else if (spaceship.ShieldLevel == 3)
         {
-            spaceship.ShieldHealth = (float)(spaceship.ShieldHealth * 1.2);
+            resources.ShieldHealth = (float)(resources.ShieldHealth * 1.2);
         }
         else
-            spaceship.ShieldHealth = 100;
+            resources.ShieldHealth = 100;
 
-        backupPower = (float)(spaceship.Power * 0.25);
-        DefaultShield = spaceship.ShieldHealth;
-        DefaultPower = spaceship.Power;
+        backupPower = (float)(resources.Power * 0.25);
+        DefaultShield = resources.ShieldHealth;
+        DefaultPower = resources.Power;
 
         // Sliders scale with each stat's own max, since Power/Shield max varies with upgrades.
         PowerSlider.minValue = 0;
@@ -104,18 +105,18 @@ public class SpaceshipHandler : MonoBehaviour
     {
         CoolHeat();
         //Validations
-        if (spaceship.Power > DefaultPower)
-            spaceship.Power = DefaultPower;
-        if (spaceship.ShieldHealth > DefaultShield) spaceship.ShieldHealth = DefaultShield;
-        if (spaceship.Heat > 100) spaceship.Heat = 100;
+        if (resources.Power > DefaultPower)
+            resources.Power = DefaultPower;
+        if (resources.ShieldHealth > DefaultShield) resources.ShieldHealth = DefaultShield;
+        if (resources.Heat > 100) resources.Heat = 100;
 
         //==========================================
-        if (spaceship.Power <= 0)
+        if (resources.Power <= 0)
         {
             if (spaceship.BackupBat && !Usedl)
             {
                 Usedl = true;
-                spaceship.Power = backupPower;
+                resources.Power = backupPower;
             }
             else
             {
@@ -126,7 +127,7 @@ public class SpaceshipHandler : MonoBehaviour
             }
 
         }
-        if (spaceship.Heat == 100)
+        if (resources.Heat == 100)
         {
             PlayerUI.SetActive(false);
             DeathUI.SetActive(true);
@@ -134,7 +135,7 @@ public class SpaceshipHandler : MonoBehaviour
             Time.timeScale = isPaused ? 0f : 1f;
         }
 
-        if (spaceship.ShieldHealth == 0)
+        if (resources.ShieldHealth == 0)
             Shields.SetActive(false);
         else Shields.SetActive(true);
 
@@ -145,10 +146,10 @@ public class SpaceshipHandler : MonoBehaviour
 
     private void UpdateStatSliders()
     {
-        PowerSlider.SetValueWithoutNotify(spaceship.Power);
-        ShieldHealthSlider.SetValueWithoutNotify(spaceship.ShieldHealth);
-        HeatSlider.SetValueWithoutNotify(spaceship.Heat);
-        HullHealthSlider.SetValueWithoutNotify(spaceship.HullHealth);
+        PowerSlider.SetValueWithoutNotify(resources.Power);
+        ShieldHealthSlider.SetValueWithoutNotify(resources.ShieldHealth);
+        HeatSlider.SetValueWithoutNotify(resources.Heat);
+        HullHealthSlider.SetValueWithoutNotify(resources.HullHealth);
     }
 
 
@@ -156,9 +157,9 @@ public class SpaceshipHandler : MonoBehaviour
 
     private void CoolHeat()
     {
-        if (!spaceship.ishit)
+        if (!resources.ishit)
         {
-            spaceship.Heat = Mathf.Max(0f, spaceship.Heat - heatCooldownRate * Time.deltaTime);
+            resources.Heat = Mathf.Max(0f, resources.Heat - heatCooldownRate * Time.deltaTime);
         }
         // if IsHit is true, heat is left untouched — no cooling happens
     }
@@ -168,7 +169,7 @@ public class SpaceshipHandler : MonoBehaviour
 
     private void RemovePower(float Value)
     {
-        spaceship.Power = Mathf.Max(0f, spaceship.Power - Value);
+        resources.Power = Mathf.Max(0f, resources.Power - Value);
     }
 
     private void AddPower(float Value)
@@ -180,35 +181,35 @@ public class SpaceshipHandler : MonoBehaviour
         if (spaceship.UpgradeSol)
             Value = (float)(Value * 2);
 
-        spaceship.Power = Mathf.Min(DefaultPower, spaceship.Power + Value);
+        resources.Power = Mathf.Min(DefaultPower, resources.Power + Value);
     }
 
     private void RemoveShieldHealth(float Value)
     {
-        spaceship.ShieldHealth = Mathf.Max(0f, spaceship.ShieldHealth - Value);
+        resources.ShieldHealth = Mathf.Max(0f, resources.ShieldHealth - Value);
     }
 
     public void ResetShieldHealth()
     {
-        spaceship.ShieldHealth = DefaultShield;
+        resources.ShieldHealth = DefaultShield;
     }
 
     private void AddHeat(float Value)
     {
-        spaceship.Heat = Mathf.Min(100f, spaceship.Heat + Value); // pick your real heat cap
+        resources.Heat = Mathf.Min(100f, resources.Heat + Value); // pick your real heat cap
     }
 
     private void RemoveHeat(float Value)
     {
-        spaceship.Heat = Mathf.Max(0f, spaceship.Heat - Value);
+        resources.Heat = Mathf.Max(0f, resources.Heat - Value);
     }
 
     private void RemoveHullHealth(float Value)
     {
-        spaceship.HullHealth = Mathf.Max(0f, spaceship.HullHealth - Value);
+        resources.HullHealth = Mathf.Max(0f, resources.HullHealth - Value);
     }
     private void ResetHullHealth()
     {
-        spaceship.HullHealth = 100;
+        resources.HullHealth = 100;
     }
 }
