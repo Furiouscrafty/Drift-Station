@@ -32,6 +32,7 @@ public class SpaceshipHandler : MonoBehaviour
 
     void Start()
     {
+        resources.CurrentOrbits = 0;
         PlayerUI.SetActive(true);
         DeathUI.SetActive(false);
         Usedl = false;
