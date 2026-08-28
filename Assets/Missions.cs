@@ -17,20 +17,20 @@ public class Missions : ScriptableObject
     {
         public MissionType mission;
 
-        [Tooltip("1-100 progress bar fill. Used by Satellite Communications and Rocket Resupply.")]
         [Range(1, 100)] public float progressBar;
 
-        [Tooltip("For MeteorShower: total shower duration in seconds. For None: cooldown (in seconds) before the next mission can spawn — set this yourself.")]
         public float timer;
 
         public int cashPerMission;
+
         public AudioClip IntroClip;
-
-        [Tooltip("Played when this mission is completed successfully. On the None entry, this doubles as the one-off audio played when the game loads.")]
         public AudioClip successAudio;
-
-        [Tooltip("Played when this mission fails. Leave empty on the None entry — it has no failure state.")]
         public AudioClip failureAudio;
+
+        [Tooltip("Optional: shown as on-screen text if the player has audio muted, in place of each clip above. Leave blank to fall back to a generic caption.")]
+        public string introCaption;
+        public string successCaption;
+        public string failureCaption;
     }
 
     [Header("Missions")]

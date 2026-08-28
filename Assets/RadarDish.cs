@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Missions;
 
 [RequireComponent(typeof(LineRenderer))]
 public class RadarDish : MonoBehaviour
@@ -6,6 +7,7 @@ public class RadarDish : MonoBehaviour
     [Header("Data")]
     public ShipUpgradeData shipData;
     public ShipResourceData shipResourceData;
+    public Missions missionsData;
 
     [Header("Raycast Origin & Direction")]
     [Tooltip("The point the radar beam fires from. Usually the dish itself or a child transform.")]
@@ -17,7 +19,7 @@ public class RadarDish : MonoBehaviour
 
     [Header("Detection Settings")]
     public float maxDistance = 1000f;
-    public LayerMask detectionLayers; // Set this to include your Planet and SpaceStation layers
+    public LayerMask detectionLayers; // Set this to include your Planet, SpaceStation, MissionRocket, and MissionStation layers
 
     [Header("Visible Laser")]
     public Color hitColor = Color.green;
@@ -28,6 +30,10 @@ public class RadarDish : MonoBehaviour
     [Header("Power Usage")]
     [Tooltip("How much power is drained per second while firing.")]
     public float powerDrainPerSecond = 10f;
+
+    [Header("Mission Progress")]
+    [Tooltip("How much progressBar increases per second while locked onto the MissionRocket or MissionStation layer.")]
+    public float progressPerSecond = 10f;
 
     // Exposed results other scripts can read after a scan
     public bool IsHittingTarget { get; private set; }
@@ -151,6 +157,11 @@ public class RadarDish : MonoBehaviour
                 OnHitSpaceStation(hit);
                 break;
 
+            case "MissionRocket":
+            case "MissionStation":
+                IncreaseMissionProgress();
+                break;
+
             default:
                 // Hit something on a detection layer that isn't specifically handled yet
                 break;
@@ -167,5 +178,19 @@ public class RadarDish : MonoBehaviour
     {
         // Space station-specific logic goes here
         Debug.Log($"RadarDish: Detected space station - {hit.collider.name}");
+    }
+
+    private void IncreaseMissionProgress()
+    {
+        if (missionsData == null)
+            return;
+
+        int index = missionsData.currentMissionIndex;
+        if (index < 0 || index >= missionsData.missions.Count)
+            return;
+
+        MissionEntry entry = missionsData.missions[index];
+        entry.progressBar = Mathf.Clamp(entry.progressBar + progressPerSecond * Time.deltaTime, 1f, 100f);
+        missionsData.missions[index] = entry;
     }
 }

@@ -20,6 +20,9 @@ MonoBehaviour:
     IntroClip: {fileID: 0}
     successAudio: {fileID: 0}
     failureAudio: {fileID: 0}
+    introCaption: 
+    successCaption: 
+    failureCaption: 
   - mission: 1
     progressBar: 1
     timer: 180
@@ -27,18 +30,52 @@ MonoBehaviour:
     IntroClip: {fileID: 8300000, guid: 4231f3337b234c24f85139c62d7f326d, type: 3}
     successAudio: {fileID: 8300000, guid: 60c564c3a50f87e47ba880e8700043b5, type: 3}
     failureAudio: {fileID: 8300000, guid: e55358642eb67624e8c90d198cc360ba, type: 3}
+    introCaption: "ISS Control to Station, over. We\u2019ve lost our comms link with
+      the orbital satellite. You need to re\u2011establish the connection manually.
+      Over and out Rotate your radar dish until you have a clean lock on the satellite\u2019s
+      signal. Once aligned, fire a communication burst to sync the channels.  Keep
+      your movements steady \u2014 that satellite is drifting fast. We\u2019re counting
+      on you to bring our network back online."
+    successCaption: "Station, this is ISS Control, over. Satellite link restored.
+      Communications are stable and fully operational. Excellent work \u2014 you\u2019ve
+      brought the network back online. Over and out."
+    failureCaption: "Station, this is ISS Control. The satellite link is gone. We
+      won\u2019t be able to restore communications.  We\u2019ll have to operate with
+      limited network coverage until further notice. Hold steady and conserve what
+      systems you can.  ISS Control, over and out."
   - mission: 2
     progressBar: 1
     timer: 120
     cashPerMission: 400
-    IntroClip: {fileID: 8300000, guid: 9a85bad05f19bc0478987fadb620147a, type: 3}
+    IntroClip: {fileID: 8300000, guid: 5f3ed262700cbb44ca67328005f6a51d, type: 3}
     successAudio: {fileID: 8300000, guid: 3349ee74874f958458294f6d75406c93, type: 3}
     failureAudio: {fileID: 8300000, guid: ad4b6b12996f2c5449837ea3699ebbe1, type: 3}
+    introCaption: "Alert, Operator. A meteor cluster is on a collision path with
+      the station. Shields are active, but they require manual alignment.  Rotate
+      the shield array to intercept incoming meteors. Block every impact you can
+      \u2014 even small fragments can cause catastrophic damage at this velocity. 
+      Stay sharp. The shower will intensify. Protect the station at all costs."
+    successCaption: "Station, ISS Control. Meteor cluster dispersed. Shields held
+      and the station remains secure. Strong work \u2014 you kept the station intact."
+    failureCaption: Station, over... Station, over! We've lost your signal, can anybody
+      read me, over. Prepare a team, we need to recover the station. ISS Control
+      standing by.
   - mission: 3
     progressBar: 1
     timer: 180
     cashPerMission: 200
-    IntroClip: {fileID: 8300000, guid: 10b736ed782e37f4a9569e56f5a9c708, type: 3}
+    IntroClip: {fileID: 8300000, guid: afa24ff3530866241abf53d5e6f9450d, type: 3}
     successAudio: {fileID: 8300000, guid: bdcceaa7c767fd04796fafed7319bb03, type: 3}
     failureAudio: {fileID: 8300000, guid: 3543f4b47201c644bb632fc25e726309, type: 3}
+    introCaption: "Station, this is ISS Control. The resupply vessel is inbound,
+      but its guidance array is offline.  Track the ship with your radar and hold
+      it centred. Once you have a stable lock, fire the docking beacon.  Precision
+      is critical \u2014 one wrong angle and the approach is lost. Let\u2019s bring
+      those supplies home. Over and out."
+    successCaption: "Station, ISS Control. Docking signal received. The resupply
+      vessel is locked in and approaching safely. Outstanding work \u2014 supplies
+      are inbound."
+    failureCaption: "Station, ISS Control. The vessel aborted docking. Guidance signal
+      was unstable. We\u2019ll need to reschedule the approach. Prepare for another
+      attempt."
   currentMissionIndex: 0

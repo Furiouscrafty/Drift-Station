@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 using static Missions;
 
@@ -25,8 +27,19 @@ public class MissionSpawner : MonoBehaviour
     [Header("Audio")]
     public AudioSource audioSource;
 
+    [Header("Captions")]
+    [Tooltip("Shown when audioSource is muted or global volume is 0, in place of playing a clip.")]
+    public TMP_Text captionText;
+    public float captionDuration = 3f;
+    private float captionTimer;
+
     [Header("Tutorial")]
     public AudioClip tutorialClip;
+    public string tutorialCaption;
+
+    [Header("UI")]
+    [Tooltip("Reflects the active mission's progressBar (1-100) while a mission is running. Hidden/ignored during None.")]
+    public Slider missionProgressSlider;
 
     private int noneIndex = -1;
     private bool hasCompletedFirstOrbit;
@@ -57,11 +70,18 @@ public class MissionSpawner : MonoBehaviour
 
         missionsData.currentMissionIndex = noneIndex;
 
+        if (missionProgressSlider != null)
+        {
+            missionProgressSlider.minValue = 1f;
+            missionProgressSlider.maxValue = 100f;
+            missionProgressSlider.gameObject.SetActive(false); // nothing to show during None
+        }
+
         // Startup audio
-        PlayClip(missionsData.missions[noneIndex].successAudio);
+        PlayClip(missionsData.missions[noneIndex].successAudio, missionsData.missions[noneIndex].successCaption);
 
         // Tutorial audio
-        PlayClip(tutorialClip);
+        PlayClip(tutorialClip, tutorialCaption);
 
         lastKnownOrbitCount = shipResourceData.CurrentOrbits;
         hasCompletedFirstOrbit = lastKnownOrbitCount >= 1;
@@ -99,6 +119,9 @@ public class MissionSpawner : MonoBehaviour
 
         if (missionTimerRunning)
             UpdateActiveMission();
+
+        UpdateProgressSlider();
+        UpdateCaptionTimer();
     }
 
     private void BeginNoneCountdown()
@@ -121,8 +144,14 @@ public class MissionSpawner : MonoBehaviour
         missionTimerRunning = true;
         meteorSpawnCountdown = 0f;
 
+        if (missionProgressSlider != null)
+        {
+            missionProgressSlider.gameObject.SetActive(true);
+            missionProgressSlider.SetValueWithoutNotify(missionsData.missions[chosenIndex].progressBar);
+        }
+
         // Play mission intro
-        PlayClip(missionsData.missions[chosenIndex].IntroClip);
+        PlayClip(missionsData.missions[chosenIndex].IntroClip, missionsData.missions[chosenIndex].introCaption);
 
         SpawnMissionItem(missionsData.missions[chosenIndex].mission);
     }
@@ -184,6 +213,14 @@ public class MissionSpawner : MonoBehaviour
         }
     }
 
+    private void UpdateProgressSlider()
+    {
+        if (missionProgressSlider == null || missionsData.currentMissionIndex == noneIndex)
+            return;
+
+        missionProgressSlider.SetValueWithoutNotify(missionsData.missions[missionsData.currentMissionIndex].progressBar);
+    }
+
     private void SpawnRandomMeteor()
     {
         if (meteorPrefabs == null || meteorPrefabs.Length == 0)
@@ -234,26 +271,58 @@ public class MissionSpawner : MonoBehaviour
         {
             if (shipData != null)
                 shipData.Money += completed.cashPerMission;
-            PlayClip(completed.successAudio);
+            PlayClip(completed.successAudio, completed.successCaption);
         }
         else
         {
-            PlayClip(completed.failureAudio);
+            PlayClip(completed.failureAudio, completed.failureCaption);
         }
 
         missionTimerRunning = false;
         ClearSpawnedObjects();
+
+        if (missionProgressSlider != null)
+            missionProgressSlider.gameObject.SetActive(false);
 
         // ALWAYS return to None (0)
         missionsData.currentMissionIndex = noneIndex;
         BeginNoneCountdown();
     }
 
-    private void PlayClip(AudioClip clip)
+    // Plays the clip normally, or shows a caption instead if audio is muted.
+    private void PlayClip(AudioClip clip, string caption)
     {
+        bool isMuted = (audioSource != null && audioSource.mute) || AudioListener.volume <= 0f;
+
+        if (isMuted)
+        {
+            ShowCaption(string.IsNullOrEmpty(caption) ? "(audio muted)" : caption);
+            return;
+        }
+
         if (clip == null || audioSource == null)
             return;
+
         audioSource.PlayOneShot(clip);
+    }
+
+    private void ShowCaption(string text)
+    {
+        if (captionText == null)
+            return;
+
+        captionText.text = text;
+        captionTimer = captionDuration;
+    }
+
+    private void UpdateCaptionTimer()
+    {
+        if (captionTimer <= 0f || captionText == null)
+            return;
+
+        captionTimer -= Time.deltaTime;
+        if (captionTimer <= 0f)
+            captionText.text = "";
     }
 
     private int FindIndexOfType(MissionType type)
