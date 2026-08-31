@@ -1,4 +1,4 @@
-<h1 align="center">Project: Drift Station</h1>h1>
+<h1 align="center">Project: Drift Station</h1>
 <h2></h2>
 
 <h3 align="left">Project Thesus</h3>
